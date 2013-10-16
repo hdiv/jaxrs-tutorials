@@ -25,7 +25,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
         ServletRegistration.Dynamic appServlet = servletContext.addServlet("CXFServlet", cxfServlet);
         appServlet.setLoadOnStartup(1);
 
-        Set<String> mappingConflicts = appServlet.addMapping("/api/*");
+        Set<String> mappingConflicts = appServlet.addMapping(AppConfig.API_BASE);
     }
 
     private WebApplicationContext createWebAppContext() {

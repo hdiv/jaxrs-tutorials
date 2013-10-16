@@ -18,6 +18,8 @@
         <ch.qos.logback-version>1.0.13</ch.qos.logback-version>
         <servlet-version>3.0.1</servlet-version>
         <jackson-version>2.0.2</jackson-version>
+        <org.eclipse.jetty.version>9.0.6.v20130930</org.eclipse.jetty.version>
+
 
         <maven-compiler-plugin-version>3.0</maven-compiler-plugin-version>
         <tomcat7-maven-plugin-version>2.0</tomcat7-maven-plugin-version>
@@ -83,6 +85,12 @@
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>${jackson-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${org.eclipse.jetty.version}</version>
         </dependency>
 
     </dependencies>

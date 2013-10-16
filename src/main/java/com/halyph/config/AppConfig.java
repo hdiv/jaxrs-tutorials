@@ -26,6 +26,8 @@ public class AppConfig {
     private static final String RESOURCES_PACKAGE = BASE_PACKAGE + ".rest";
     private static final String PROVIDER_PACKAGE = BASE_PACKAGE + ".rest.provider";
 
+    public static final String API_BASE = "/api/*";
+
     @ApplicationPath("/")
     public class JaxRsApiApplication extends Application { }
 
