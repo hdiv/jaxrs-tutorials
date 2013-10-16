@@ -1,25 +1,30 @@
 package com.halyph.config;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.halyph.rest.UserResource;
+import com.halyph.util.RestProviderBeanScanner;
+import com.halyph.util.RestServiceBeanScanner;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import com.halyph.rest.ExceptionResource;
-import com.halyph.service.UserService;
-import com.halyph.service.UserServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
+@ComponentScan(AppConfig.SERVICE_PACKAGE)
 public class AppConfig {
+
+    public static final String BASE_PACKAGE = "com.halyph";
+    public static final String SERVICE_PACKAGE = BASE_PACKAGE + ".service";
+    private static final String RESOURCES_PACKAGE = BASE_PACKAGE + ".rest";
+    private static final String PROVIDER_PACKAGE = BASE_PACKAGE + ".rest.provider";
 
     @ApplicationPath("/")
     public class JaxRsApiApplication extends Application { }
@@ -33,9 +38,9 @@ public class AppConfig {
     @DependsOn("cxf")
     public Server jaxRsServer(ApplicationContext appContext) {
         JAXRSServerFactoryBean factory = RuntimeDelegate.getInstance().createEndpoint(jaxRsApiApplication(), JAXRSServerFactoryBean.class);
-        factory.setServiceBeans(Arrays.<Object>asList(userResource(), exceptionResource()));
+        factory.setServiceBeans(restServiceList(appContext));
         factory.setAddress("/" + factory.getAddress());
-        factory.setProvider(jsonProvider());
+        factory.setProviders(restProviderList(appContext, jsonProvider()));
         return factory.create();
     }
 
@@ -49,18 +54,15 @@ public class AppConfig {
         return new JacksonJsonProvider();
     }
 
-    @Bean
-    public UserService userService() {
-        return new UserServiceImpl();
+    private List<Object> restServiceList(ApplicationContext appContext) {
+        return RestServiceBeanScanner.scan(appContext, AppConfig.RESOURCES_PACKAGE);
     }
 
-    @Bean
-    public UserResource userResource() {
-        return new UserResource();
+    private List<Object> restProviderList(final ApplicationContext appContext,
+                                          final JacksonJsonProvider jsonProvider) {
+        final List<Object> providers = RestProviderBeanScanner.scan(appContext, PROVIDER_PACKAGE);
+        providers.add(jsonProvider);
+        return providers;
     }
 
-    @Bean
-    public ExceptionResource exceptionResource() {
-        return new ExceptionResource();
-    }
 }
