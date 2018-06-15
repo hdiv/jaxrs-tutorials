@@ -92,7 +92,11 @@
             <artifactId>jetty-webapp</artifactId>
             <version>${org.eclipse.jetty.version}</version>
         </dependency>
-
+		<dependency>
+			<groupId>com.hdivsecurity</groupId>
+			<artifactId>hdiv-for-services</artifactId>
+			<version>1.9.1-SNAPSHOT</version>
+		</dependency>
     </dependencies>
 
     <build>
